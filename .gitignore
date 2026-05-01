@@ -1,0 +1,6 @@
+# User-specific sensitive data
+input/*
+!input/.gitkeep
+!input/cv.template.md
+output/*
+!output/.gitkeep

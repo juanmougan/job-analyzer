@@ -8,10 +8,11 @@ A Claude Code skill that receives a job listing and produces a comprehensive ana
 
 ### Job Listing (required)
 
-The skill accepts the job listing via one of:
+The skill accepts a job listing URL as its argument (`<job-listing-url>`). The URL can point to any job listing page (company career sites, LinkedIn, job boards, etc.).
 
-1. **LinkedIn URL** — the skill fetches and parses the listing from the provided URL.
-2. **PDF fallback** — if fetching fails, the skill creates the folder `input/<company_name>/<position_name>/` and asks the user to print the LinkedIn listing as a PDF and place it there as `listing.pdf`. The skill then reads the PDF.
+1. **URL fetch** — the skill fetches and parses the listing from the provided URL. It performs best-effort extraction: it proceeds with whatever information it can find (title, company, responsibilities, requirements, etc.) without requiring all fields to be present.
+2. **Login wall detection** — if the fetched page contains no job-specific information (e.g., only login/sign-up prompts), the skill notifies the user that the page appears to require authentication.
+3. **PDF fallback** — if fetching fails or a login wall is detected, the skill creates the folder `input/<company_name>/<position_name>/` and asks the user to save the listing as a PDF and place it there as `listing.pdf`. The skill then reads the PDF.
 
 ### CV (required)
 

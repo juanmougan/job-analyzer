@@ -4,3 +4,5 @@ input/*
 !input/cv.template.md
 output/*
 !output/.gitkeep
+
+.DS_Store

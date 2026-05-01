@@ -3,8 +3,8 @@ name: job-analyzer
 description: >
   Analyze a job listing against the user's CV and profile. Produces a position
   analysis, motivation letter, preparation plan, and interview script.
-  Use when the user provides a LinkedIn job listing URL or says "analyze a job".
-argument-hint: <linkedin-job-url>
+  Use when the user provides a job listing URL or says "analyze a job".
+argument-hint: <job-listing-url>
 allowed-tools:
   - Read
   - Write
@@ -27,22 +27,20 @@ Follow these steps in order. Do not skip any step.
 
 ### Step 1 — Validate arguments
 
-The LinkedIn job listing URL is provided as `$ARGUMENTS`.
+The job listing URL is provided as `$ARGUMENTS`.
 
 If `$ARGUMENTS` is empty, respond with:
-> Usage: `/job-analyzer <linkedin-job-url>`
+> Usage: `/job-analyzer <job-listing-url>`
 >
 > Example: `/job-analyzer https://www.linkedin.com/jobs/view/12345678`
 
 Then stop. Do not proceed.
 
-If `$ARGUMENTS` does not contain `linkedin.com`, ask the user to confirm whether the URL is a job listing. If they confirm, proceed. If not, stop.
-
 ### Step 2 — Fetch the job listing
 
 Use WebFetch to fetch the URL from `$ARGUMENTS`.
 
-Extract from the listing:
+Perform best-effort extraction. Extract as many of the following as available — do not fail if some fields are missing:
 - Job title
 - Company name
 - Location
@@ -53,12 +51,14 @@ Extract from the listing:
 - Salary (if present)
 - Full listing text
 
-**If WebFetch fails, returns an error, or returns a login wall** (the content primarily mentions "Sign in", "Join LinkedIn", or contains very little job-specific information):
+**Login wall detection:** If the fetched content contains no job-specific information (e.g., it primarily mentions "Sign in", "Join now", "Create account", or contains very little substantive content), notify the user that the page appears to require authentication and proceed to the PDF fallback below.
+
+**If WebFetch fails, returns an error, or a login wall is detected:**
 
 1. Ask the user for the company name and position name.
 2. Sanitize both for filesystem use: lowercase, replace spaces with hyphens, remove special characters except hyphens.
 3. Create the directory `input/<company_name>/<position_name>/` using `mkdir -p`.
-4. Tell the user: "I couldn't fetch the listing. I've created the folder `input/<company_name>/<position_name>/`. Please print the LinkedIn page as a PDF and save it there as `listing.pdf`. Let me know when it's ready."
+4. Tell the user: "I couldn't fetch the listing. I've created the folder `input/<company_name>/<position_name>/`. Please save the listing page as a PDF and place it there as `listing.pdf`. Let me know when it's ready."
 5. Wait for the user to confirm.
 6. Read the PDF using the Read tool with `pages: "1-5"`.
 

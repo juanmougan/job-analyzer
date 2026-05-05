@@ -67,6 +67,49 @@ All outputs are written to `output/<company_name>/<position_name>_<YYYY-MM-DD_HH
 - Potential pitfalls the interviewer might steer toward
 - Likely interview questions with suggested answers
 
+## Follow-up Mode
+
+The skill supports a follow-up mode for refining previously generated application materials.
+
+### Invocation
+
+Instead of a job-listing URL, the user passes an output folder name (or a substring of one) as the argument:
+
+```
+/job-analyzer solution-architect-daily-banking-services_2026-05-01_20-56
+/job-analyzer daily-banking
+/job-analyzer solution-architect
+```
+
+### Argument disambiguation
+
+The skill determines whether the argument is a URL (new analysis) or a folder reference (follow-up) by checking if the argument starts with `http://` or `https://`. Anything else is treated as a follow-up folder reference.
+
+### Folder resolution
+
+1. **Search** — the skill searches the entire `output/` hierarchy for folders whose name contains the argument as a substring (case-insensitive).
+2. **Single match** — proceed directly with that folder.
+3. **Multiple matches** — show all matching folders (with their full paths) and ask the user to pick the correct one.
+4. **No matches** — inform the user that no matching folder was found and show the available output folders for reference.
+
+### Context loading
+
+The skill reads all existing output files in the resolved folder (`analysis.md`, `motivation_letter.md`, `preparation_plan.md`, `interview_script.md`) to understand the position and previous analysis. It does NOT re-fetch the original job listing.
+
+### Change request
+
+1. The skill asks the user interactively what they want to change (free-form text). Examples:
+   - "The motivation letter should have a different intro, make it less like a sales pitch and more factual"
+   - "I already know Kubernetes, update the preparation plan accordingly"
+   - "Add more emphasis on my leadership experience across all documents"
+2. The skill determines which output files are affected by the change request.
+3. The skill shows the user which files it intends to modify and asks for confirmation before proceeding.
+4. Changes are written in place, overwriting the existing files in the resolved folder.
+
+### CV and profile
+
+The skill still reads `input/cv.md` and `input/user_profile.md` during follow-up, since they provide the user context needed to make meaningful edits.
+
 ## Behavior
 
 - The skill MUST NOT make assumptions about the user. When unsure, it asks questions via the appropriate tool.

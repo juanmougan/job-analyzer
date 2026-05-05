@@ -3,14 +3,17 @@ name: job-analyzer
 description: >
   Analyze a job listing against the user's CV and profile. Produces a position
   analysis, motivation letter, preparation plan, and interview script.
-  Use when the user provides a job listing URL or says "analyze a job".
-argument-hint: <job-listing-url>
+  Also supports follow-up mode to refine previously generated outputs.
+  Use when the user provides a job listing URL, says "analyze a job",
+  or wants to refine/follow up on a previous analysis.
+argument-hint: <job-listing-url or output-folder-name>
 allowed-tools:
   - Read
   - Write
   - Bash(ls *)
   - Bash(mkdir *)
   - Bash(date *)
+  - Bash(find *)
   - WebFetch
   - AskUserQuestion
   - Glob
@@ -19,22 +22,93 @@ disable-model-invocation: true
 
 # Job Listing Analyzer
 
-Analyze a job listing against the user's CV and personal profile to produce tailored application materials.
+Analyze a job listing against the user's CV and personal profile to produce tailored application materials. Also supports follow-up mode to refine previously generated outputs.
 
 ## Workflow
 
 Follow these steps in order. Do not skip any step.
 
-### Step 1 — Validate arguments
+### Step 1 — Validate and route arguments
 
-The job listing URL is provided as `$ARGUMENTS`.
+The argument is provided as `$ARGUMENTS`.
 
 If `$ARGUMENTS` is empty, respond with:
-> Usage: `/job-analyzer <job-listing-url>`
+> Usage:
+> - New analysis: `/job-analyzer <job-listing-url>`
+> - Follow-up: `/job-analyzer <output-folder-name-or-substring>`
 >
-> Example: `/job-analyzer https://www.linkedin.com/jobs/view/12345678`
+> Examples:
+> - `/job-analyzer https://www.linkedin.com/jobs/view/12345678`
+> - `/job-analyzer solution-architect-daily-banking-services_2026-05-01_20-56`
+> - `/job-analyzer daily-banking`
 
 Then stop. Do not proceed.
+
+**Determine the mode:**
+- If `$ARGUMENTS` starts with `http://` or `https://` → **New analysis mode**. Go to Step 2.
+- Otherwise → **Follow-up mode**. Go to Step F1.
+
+---
+
+## Follow-up Mode
+
+### Step F1 — Resolve the output folder
+
+Search the `output/` hierarchy for folders whose name contains `$ARGUMENTS` as a case-insensitive substring:
+
+```
+find output -type d -iname "*<ARGUMENTS>*"
+```
+
+- **No matches** — inform the user that no matching folder was found. List all available output folders with `find output -mindepth 2 -maxdepth 2 -type d` for reference. Then stop.
+- **Single match** — proceed with that folder.
+- **Multiple matches** — show all matching folders with their full paths and ask the user to pick the correct one using AskUserQuestion.
+
+### Step F2 — Load existing outputs
+
+Read all four output files from the resolved folder:
+1. `analysis.md`
+2. `motivation_letter.md`
+3. `preparation_plan.md`
+4. `interview_script.md`
+
+These provide the full context of the position and previous analysis.
+
+### Step F3 — Read CV and user profile
+
+Read `input/cv.md` and `input/user_profile.md`. These are needed to make meaningful edits that stay consistent with the user's background and personality.
+
+If either file is missing, follow the same handling as Steps 3 and 4 in new analysis mode.
+
+### Step F4 — Ask for the change request
+
+Ask the user what they want to change using AskUserQuestion. The question should be open-ended, inviting free-form text. For example:
+
+> What would you like to change or improve in your application materials?
+
+### Step F5 — Confirm affected files
+
+Based on the user's change request, determine which of the four output files need to be modified. Present the list of files that will be changed to the user and ask for confirmation before proceeding using AskUserQuestion. For example:
+
+> Based on your request, I would modify these files:
+> - `motivation_letter.md` — rewrite the introduction with a more factual tone
+> - `interview_script.md` — adjust talking points to match the updated letter
+>
+> Should I go ahead?
+
+### Step F6 — Apply changes
+
+Modify only the confirmed files. Write the updated content in place, overwriting the existing files in the resolved folder. Do not create a new folder.
+
+After writing all changes, report:
+- Which files were modified
+- A one-line summary of what changed in each
+
+Then stop. Do not continue to the new analysis steps.
+
+---
+
+## New Analysis Mode
 
 ### Step 2 — Fetch the job listing
 

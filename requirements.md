@@ -2,7 +2,7 @@
 
 ## Overview
 
-A Claude Code skill that receives a job listing and produces a comprehensive analysis, motivation letter, preparation plan, and interview script tailored to the user's profile.
+A Claude Code skill that receives a job listing and produces a comprehensive analysis, motivation letter, preparation plan, interview script, and (when no salary is listed) salary research tailored to the user's profile.
 
 ## Inputs
 
@@ -36,7 +36,7 @@ The skill accepts a job listing URL as its argument (`<job-listing-url>`). The U
 
 ## Outputs
 
-All outputs are written to `output/<company_name>/<position_name>_<YYYY-MM-DD_HH-mm>/`. All four files are produced in a single run.
+All outputs are written to `output/<company_name>/<position_name>_<YYYY-MM-DD_HH-mm>/`. The first four files are always produced. The fifth (`salary.md`) is only produced when the listing has no salary range.
 
 ### 1. `analysis.md` — Position Analysis
 
@@ -67,6 +67,45 @@ All outputs are written to `output/<company_name>/<position_name>_<YYYY-MM-DD_HH
 - Potential pitfalls the interviewer might steer toward
 - Likely interview questions with suggested answers
 
+### 5. `salary.md` — Salary Research & Negotiation (conditional)
+
+This file is only generated when the job listing does **not** include a salary range. If the listing already contains salary information, this file is skipped entirely.
+
+#### Trigger
+
+After parsing the job listing, the skill checks whether a salary or compensation range was found. If not, it informs the user that no salary was listed and proceeds with the research automatically — no confirmation needed.
+
+#### Research approach
+
+The skill performs a **best-effort** web search using the job title, company name, and country (e.g. "Data Scientist salary Rabobank Netherlands"). It searches a few well-known sources:
+
+- **Glassdoor** — salary estimates and reported salaries for the specific company and role
+- **levels.fyi** — if applicable (mostly tech companies)
+- **Payscale / Indeed Salaries** — general market data for the role in the country
+- **LinkedIn Salary Insights** — if publicly accessible
+
+The skill searches for the role within the **country** of the listing (e.g. "the Netherlands"), not a specific city. It does not adjust for cost-of-living differences between cities.
+
+#### Contents
+
+1. **Market salary range** — the general range found for this role and seniority level in the country, based on whatever sources returned useful data.
+
+2. **Personalized recommendation** — a suggested negotiation range adjusted for the user's experience level, years of experience, and relevant skills (derived from `input/cv.md`). This should explain *why* the recommendation differs from the general range (e.g. "Your 8 years of experience and PhD put you in the upper quartile").
+
+3. **Company compensation culture** — salary-specific data about the company's compensation practices:
+   - How the company's reported salaries compare to market average (above/below/at market)
+   - Whether the company is known for tough negotiation or generous offers
+   - Any patterns in reported compensation data (e.g. "base salary below market but strong bonus structure")
+   - Negotiation strategies others may have shared publicly
+
+4. **Sources** — every piece of data must be attributed to a specific source with a URL. When data is limited or conflicting, the skill explicitly states the confidence level (e.g. "Only 3 salary reports found on Glassdoor — treat this range as approximate").
+
+#### Constraints
+
+- Only use publicly available data — no scraping behind login walls.
+- Never fabricate salary numbers. If no data is found for the specific company, report only the general market range and state clearly that company-specific data was unavailable.
+- All sources must be cited with URLs.
+
 ## Follow-up Mode
 
 The skill supports a follow-up mode for refining previously generated application materials.
@@ -94,7 +133,7 @@ The skill determines whether the argument is a URL (new analysis) or a folder re
 
 ### Context loading
 
-The skill reads all existing output files in the resolved folder (`analysis.md`, `motivation_letter.md`, `preparation_plan.md`, `interview_script.md`) to understand the position and previous analysis. It does NOT re-fetch the original job listing.
+The skill reads all existing output files in the resolved folder (`analysis.md`, `motivation_letter.md`, `preparation_plan.md`, `interview_script.md`, and `salary.md` if present) to understand the position and previous analysis. It does NOT re-fetch the original job listing.
 
 ### Change request
 

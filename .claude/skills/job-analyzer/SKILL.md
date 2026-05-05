@@ -15,6 +15,7 @@ allowed-tools:
   - Bash(date *)
   - Bash(find *)
   - WebFetch
+  - WebSearch
   - AskUserQuestion
   - Glob
 disable-model-invocation: true
@@ -164,13 +165,37 @@ Review the job listing against the CV and user profile. If anything is unclear o
 
 Do not make assumptions. Ask as many questions as needed.
 
-### Step 6 — Create the output directory
+### Step 6 — Research the interview process
+
+Use WebSearch to find public information about how the company interviews for this type of role. Run multiple searches, for example:
+
+- `"<Company> interview process <Job Title>"`
+- `"<Company> interview experience <Job Title>"`
+- `"<Company> interview questions <Job Title>"`
+
+Look for results from Glassdoor, Blind, LeetCode Discuss, Reddit, YouTube, company engineering blogs, and general web. Prefer recent results (last 1-2 years).
+
+Extract whatever is available:
+- Number of interview rounds and overall timeline
+- What each round covers (coding, system design, behavioral, culture fit, hiring manager, etc.)
+- Question types (LeetCode-style, take-home, pair programming, whiteboard, case studies)
+- Difficulty level as reported by candidates
+- Duration per round if reported
+- Tips from candidates
+
+If results are sparse for the exact role, broaden to similar roles at the same company, or similar companies in the same region.
+
+**If no data is found at all:** note this — you will use a generic fallback when writing the output files (see the output templates for guidance).
+
+Keep the extracted information ready for use in Step 8 when generating `preparation_plan.md` and `interview_script.md`.
+
+### Step 7 — Create the output directory
 
 1. Derive `<company_name>` and `<position_name>` from the listing (sanitize: lowercase, hyphens instead of spaces, remove special characters except hyphens).
 2. Get a timestamp by running: `date +"%Y-%m-%d_%H-%M"`
 3. Create `output/<company_name>/<position_name>_<timestamp>/` using `mkdir -p`.
 
-### Step 7 — Generate output files
+### Step 8 — Generate output files
 
 Load `references/output-templates.md` for the structure of each file.
 
@@ -178,12 +203,12 @@ Generate and write all four files sequentially into the output directory:
 
 1. **`analysis.md`** — Position analysis with strengths and gaps
 2. **`motivation_letter.md`** — Tailored motivation letter
-3. **`preparation_plan.md`** — Study topics with specific resources
-4. **`interview_script.md`** — Talking points, questions, and pitfalls
+3. **`preparation_plan.md`** — Study topics with specific resources, including the interview process summary from Step 6
+4. **`interview_script.md`** — Talking points, questions, pitfalls, and the detailed interview process breakdown from Step 6
 
 Use the user's actual CV content and profile when generating. Never use generic filler text.
 
-### Step 8 — Report completion
+### Step 9 — Report completion
 
 After writing all four files, report:
 - The output directory path

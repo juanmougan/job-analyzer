@@ -77,6 +77,22 @@ Kind regards,
 ```markdown
 # Preparation Plan: [Job Title] at [Company]
 
+## Interview Process Overview
+
+[Summary of what is publicly known about how the company interviews for this type of role. This section helps the user understand what to prepare for so the study topics below are contextualized.]
+
+### Expected Format
+
+- **Rounds:** [Number of rounds and overall timeline, e.g. "4 rounds over 2-3 weeks"]
+- **Stages:** [Brief list of stages, e.g. "Recruiter screen → Technical deep-dive → System design → Culture/leadership fit"]
+- **Question types:** [What types of questions to expect: LeetCode, take-home, pair programming, whiteboard, case study, behavioral, etc.]
+
+### What This Means for Your Preparation
+
+[1-2 sentences connecting the interview format to the study plan below. E.g. "Since the process includes a system design round, Priority 1 topics below emphasize architectural thinking. The behavioral round means the interview script's STAR-format answers are especially important."]
+
+**Sources:** [List URLs where this information was found. If no company-specific data was found, state: "No public interview data found for [Company]. The above is based on typical processes for [role type] roles at similar companies in [region]."]
+
 ## Priority 1: Critical Topics (Must Study)
 
 ### [Topic Name]
@@ -119,6 +135,8 @@ Kind regards,
 ```
 
 **Guidelines:**
+- The Interview Process Overview must appear before the priority topics, so the user understands what they're preparing for
+- If company-specific interview data was found, cite the sources. If not, use a generic fallback based on role type and region, and clearly label it as such
 - Prioritize by direct relevance to the listing's requirements
 - Resources must be real and specific — include actual book titles, course names, and URLs to official documentation
 - Time estimates should be realistic
@@ -132,6 +150,35 @@ Kind regards,
 ## Recommended Tone
 
 [Based on the user's personality profile and the company's culture: formal vs. conversational, assertive vs. modest, etc. Include specific guidance like "lead with curiosity" or "be direct about your achievements".]
+
+## Expected Interview Process
+
+[Detailed round-by-round breakdown of what the user can expect, based on the research from Step 6.]
+
+### Round 1: [Stage Name, e.g. "Recruiter Screen"]
+- **Format:** [Phone/video call, duration]
+- **What to expect:** [What topics are typically covered]
+- **Tips:** [Advice from real candidates or general best practices]
+
+### Round 2: [Stage Name, e.g. "Technical Deep-Dive"]
+- **Format:** [Video call/onsite, duration, who conducts it]
+- **What to expect:** [Coding problems, system discussion, tech stack questions, etc.]
+- **Tips:** [What candidates reported as helpful]
+
+### Round 3: [Stage Name, e.g. "System Design"]
+- **Format:** [Video call/onsite, duration]
+- **What to expect:** [Type of design problems, scope, whiteboard vs. discussion]
+- **Tips:** [Common themes from candidate reports]
+
+### Round N: [Continue for as many rounds as discovered]
+[Same structure]
+
+### Overall Timeline
+[Expected time from first contact to offer, if reported]
+
+**Sources:** [URLs where this information was found. If using the generic fallback, state: "No public interview data found for [Company]. The above is a typical process for [role type] roles at similar companies in [region]. Ask the recruiter for specifics about their process."]
+
+---
 
 ## Your Elevator Pitch (30 seconds)
 
@@ -191,6 +238,9 @@ Ask at least 2-3 of these to show genuine interest and domain knowledge.
 ```
 
 **Guidelines:**
+- The Expected Interview Process section must appear before the elevator pitch, so the user reads the process overview first
+- Round-by-round breakdown should include as many rounds as were discovered from public sources. Use the "Round N" template for each
+- If no company-specific data was found, provide a generic process for the role type and region, clearly labeled as a fallback, and recommend asking the recruiter
 - All answers must use the user's actual experience from the CV, not hypothetical examples
 - Tone guidance must reflect the user's personality profile
 - Questions to ask should demonstrate knowledge of the company and role, not be generic

@@ -106,6 +106,74 @@ The skill searches for the role within the **country** of the listing (e.g. "the
 - Never fabricate salary numbers. If no data is found for the specific company, report only the general market range and state clearly that company-specific data was unavailable.
 - All sources must be cited with URLs.
 
+## Interview Process Research
+
+The skill researches how the company actually conducts interviews for the given role, so the user knows what to expect and can prepare accordingly.
+
+### When it runs
+
+Interview process research is performed during **new analysis only** (not during follow-up mode). The results are included in two output files:
+
+- **`preparation_plan.md`** — a summary of the expected interview process, so the user can tailor their study plan to the actual format (e.g. focus on LeetCode-style problems if the company is known for them).
+- **`interview_script.md`** — a detailed round-by-round breakdown with specific advice for each stage.
+
+### Research approach
+
+The skill performs a **best-effort** web search using queries like `"<Company> interview process <Job Title>"`, `"<Company> interview experience <Job Title>"`, and similar variations. It searches broadly across:
+
+- **Glassdoor** — interview reviews and reported interview questions
+- **Blind** — anonymous employee reports on interview processes
+- **LeetCode Discuss** — interview experiences, especially for technical roles
+- **Reddit** — subreddits like r/cscareerquestions, r/ExperiencedDevs, company-specific subs
+- **YouTube** — interview experience videos and walkthroughs
+- **Company engineering blogs** — sometimes describe their hiring philosophy
+- **General web results** — blog posts, Medium articles, personal accounts
+
+The skill searches for the role within the **company** and, if results are sparse, broadens to similar roles at the same company or similar companies in the same region.
+
+### What to extract
+
+For each source found, extract as much of the following as possible:
+
+- **Number of rounds** and overall timeline (e.g. "4 rounds over 3 weeks")
+- **Round-by-round breakdown**: what each round covers (coding, system design, behavioral, culture fit, hiring manager, etc.)
+- **Question types**: LeetCode-style, take-home assignments, pair programming, whiteboard, case studies, etc.
+- **Difficulty level**: as reported by candidates
+- **Duration**: per round if reported
+- **Tips from candidates**: what helped, what surprised them, what to watch out for
+- **Recency**: prefer recent experiences (last 1-2 years) over older ones
+
+### Placement in outputs
+
+#### In `preparation_plan.md`
+
+A section titled **"Interview Process Overview"** placed before the priority topics. Contains:
+- Summary of the expected interview format and number of rounds
+- What types of preparation each round requires (so the user can see the connection to the study topics below)
+- Source attribution
+
+#### In `interview_script.md`
+
+A section titled **"Expected Interview Process"** placed after the recommended tone. Contains:
+- Round-by-round breakdown with: stage name, format, typical topics, duration, and specific tips
+- Overall timeline if reported
+- Source attribution with URLs
+
+### No-data fallback
+
+If no company-specific interview process information is found:
+
+1. State clearly that no public data was found for the specific company and role.
+2. Provide a **generic expected process** based on the role type and region. For example: "Tech Lead roles at mid-to-large tech companies in the Netherlands typically involve: an initial recruiter screen, a technical deep-dive, a system design round, and a culture/leadership fit conversation."
+3. Recommend the user ask the recruiter for details about the process.
+
+### Constraints
+
+- Only use publicly available data — no scraping behind login walls.
+- Never fabricate interview process details. If information is sparse, say so explicitly.
+- All sources must be cited with URLs when available.
+- Prefer recent experiences (last 1-2 years) over older ones, and note when data may be outdated.
+
 ## Follow-up Mode
 
 The skill supports a follow-up mode for refining previously generated application materials.
